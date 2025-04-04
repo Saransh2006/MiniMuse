@@ -208,90 +208,90 @@
   
 
   <script>
-    // JavaScript logic to control song switching
+  let currentSongIndex = 1;
 
-    let currentSongIndex = 1;
-
-    const songs = ['song1', 'song2', 'song3', 'song4', 'song5', 'song6', 'song7'];
-     const bgImages = [
-    'background1.jpg',
-    'background2.jpg',
-    'background3.jpg',
-    'background4.jpg',
-    'background5 (1).jpg'
+  const songs = ['song1', 'song2', 'song3', 'song4', 'song5', 'song6', 'song7'];
+  const backgrounds = [
+    'url(background1.jpg)', // Song 1
+    'url(background2.jpg)', // Song 2
+    'url(background3.jpg)', // Song 3
+    'url(background4.jpg)', // Song 4
+    'url(background5 (1).jpg)', // Song 5
+    'url(background1.jpg)', // Song 6
+    'url(background3.jpg)'  // Song 7
   ];
 
-  bgImages.forEach(src => {
-    const img = new Image();
-    img.src = src;
+  // Stop all audios before switching
+  function pauseAllAudios() {
+    songs.forEach((song, index) => {
+      const audio = document.getElementById(`audio${index + 1}`);
+      const playBtn = document.getElementById(`play-btn${index + 1}`);
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      if (playBtn) {
+        playBtn.textContent = '▶';
+      }
+    });
+  }
+
+  function updatePlayer(songIndex) {
+    // Hide all players
+    songs.forEach((song) => {
+      document.getElementById(song).style.display = 'none';
+    });
+
+    // Show the selected player
+    const currentSongId = songs[songIndex - 1];
+    document.getElementById(currentSongId).style.display = 'block';
+
+    // Change background
+    document.body.style.backgroundImage = backgrounds[songIndex - 1];
+
+    // Pause all other songs
+    pauseAllAudios();
+
+    // Add play/pause toggle
+    const playBtn = document.getElementById(`play-btn${songIndex}`);
+    const audio = document.getElementById(`audio${songIndex}`);
+
+    // Remove previous click handlers if any
+    const newPlayBtn = playBtn.cloneNode(true);
+    playBtn.parentNode.replaceChild(newPlayBtn, playBtn);
+
+    newPlayBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        pauseAllAudios(); // ensure only one song plays at a time
+        audio.play();
+        newPlayBtn.textContent = '||';
+      } else {
+        audio.pause();
+        newPlayBtn.textContent = '▶';
+      }
+    });
+  }
+
+  function nextSong() {
+    currentSongIndex = (currentSongIndex % songs.length) + 1;
+    updatePlayer(currentSongIndex);
+  }
+
+  function prevSong() {
+    currentSongIndex = (currentSongIndex - 2 + songs.length) % songs.length + 1;
+    updatePlayer(currentSongIndex);
+  }
+
+  // Attach next/prev event listeners to each song’s buttons
+  songs.forEach((song, index) => {
+    const songNum = index + 1;
+    document.getElementById(`next-btn${songNum}`).addEventListener('click', nextSong);
+    document.getElementById(`prev-btn${songNum}`).addEventListener('click', prevSong);
   });
 
-    function updatePlayer(songIndex) {
-      // Hide all songs
-      songs.forEach(song => {
-        document.getElementById(song).style.display = "none";
-      });
+  // Initialize the first player
+  updatePlayer(currentSongIndex);
+</script>
 
-      // Show current song
-      const currentSong = songs[songIndex - 1];
-      document.getElementById(currentSong).style.display = "block";
-
-      // Change background image
-      document.body.style.backgroundImage = backgrounds[songIndex - 1];
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-
-      // Set play/pause button
-      const playBtn = document.getElementById("play-btn" + songIndex);
-      const audioPlayer = document.getElementById("audio" + songIndex);
-
-      playBtn.addEventListener("click", () => {
-        if (audioPlayer.paused) {
-          audioPlayer.play();
-          playBtn.textContent = "||";
-        } else {
-          audioPlayer.pause();
-          playBtn.textContent = "▶";
-        }
-      });
-    }
-
-    // Initial Song Display
-    updatePlayer(currentSongIndex);
-
-    // Next Song
-    function nextSong() {
-      currentSongIndex = (currentSongIndex % songs.length) + 1;
-      updatePlayer(currentSongIndex);
-    }
-
-    // Previous Song
-    function prevSong() {
-      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length || songs.length;
-      updatePlayer(currentSongIndex);
-    }
-
-    // Event listeners for next and previous buttons
-    document.getElementById("next-btn1").addEventListener("click", nextSong);
-    document.getElementById("prev-btn1").addEventListener("click", prevSong);
-
-    document.getElementById("next-btn2").addEventListener("click", nextSong);
-    document.getElementById("prev-btn2").addEventListener("click", prevSong);
-
-    document.getElementById("next-btn3").addEventListener("click", nextSong);
-    document.getElementById("prev-btn3").addEventListener("click", prevSong);
-
-    document.getElementById("next-btn4").addEventListener("click", nextSong);
-    document.getElementById("prev-btn4").addEventListener("click", prevSong);
-
-    document.getElementById("next-btn5").addEventListener("click", nextSong);
-    document.getElementById("prev-btn5").addEventListener("click", prevSong);
-
-    document.getElementById("next-btn6").addEventListener("click", nextSong);
-    document.getElementById("prev-btn6").addEventListener("click", prevSong);
-
-    document.getElementById("next-btn7").addEventListener("click", nextSong);
-    document.getElementById("prev-btn7").addEventListener("click", prevSong);
-  </script>
 </body>
 </html>
