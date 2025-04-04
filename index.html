@@ -213,15 +213,18 @@
     let currentSongIndex = 1;
 
     const songs = ['song1', 'song2', 'song3', 'song4', 'song5', 'song6', 'song7'];
-    const backgrounds = [
-      'url(background1.jpg)', // Background for song 1
-      'url(background2.jpg)', // Background for song 2
-      'url(background3.jpg)', // Background for song 3
-      'url(background4.jpg)', // Background for song 4
-      'url(background5 (1).jpg)', // Background for song 5
-      'url(background1.jpg)', // Background for song 6
-      'url(background3.jpg)'  // Background for song 7
-    ];
+     const bgImages = [
+    'background1.jpg',
+    'background2.jpg',
+    'background3.jpg',
+    'background4.jpg',
+    'background5 (1).jpg'
+  ];
+
+  bgImages.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
 
     function updatePlayer(songIndex) {
       // Hide all songs
